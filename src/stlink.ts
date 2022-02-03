@@ -170,8 +170,10 @@ export class STLinkServerController extends EventEmitter implements GDBServerCon
             }
             serverargs.push('-cp', stm32cubeprogrammer);
         }
-
-        this.setLDPath(stm32cubeprogrammer);
+        
+        if (this.args.preserve_user_environment) {
+            this.setLDPath(stm32cubeprogrammer);
+        }
          
         if (this.args.interface !== 'jtag') {
             serverargs.push('--swd');
