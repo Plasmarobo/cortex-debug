@@ -70,6 +70,7 @@ export class STLinkServerController extends EventEmitter implements GDBServerCon
 
     private args: ConfigurationArguments;
     private ports: { [name: string]: number };
+    private env: { preserve_user_environment: false };
     
     public static getSTMCubeIdeDir(): string {
         switch (os.platform()) {
@@ -97,6 +98,10 @@ export class STLinkServerController extends EventEmitter implements GDBServerCon
 
     public setArguments(args: ConfigurationArguments): void {
         this.args = args;
+    }
+    
+    public setEnv(env: { preserve_user_environment: false}): void {
+        this.env = env;
     }
 
     public customRequest(command: string, response: DebugProtocol.Response, args: any): boolean {
@@ -171,7 +176,7 @@ export class STLinkServerController extends EventEmitter implements GDBServerCon
             serverargs.push('-cp', stm32cubeprogrammer);
         }
         
-        if (this.args.preserve_user_environment) {
+        if (!this.env.preserve_user_environment) {
             this.setLDPath(stm32cubeprogrammer);
         }
          
@@ -218,7 +223,7 @@ export class STLinkServerController extends EventEmitter implements GDBServerCon
 
     public serverLaunchStarted(): void {}
     public serverLaunchCompleted(): void {
-        if (os.platform() !== 'win32') {
+        if (os.platform() !== 'win32' && !this.env.preserve_user_environment) {
             if (this.saveLdPath === undefined) {
                 delete process.env[LD_PATH_NAME];
             } else {
