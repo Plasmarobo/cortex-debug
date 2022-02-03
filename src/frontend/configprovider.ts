@@ -68,6 +68,12 @@ export class CortexDebugConfigurationProvider implements vscode.DebugConfigurati
         else if (!config.rttConfig.decoders) {
             config.rttConfig.decoders = [];
         }
+        if (!config.envConfig) {
+            config.envConfig = { preserve_user_environment: false };
+        }
+        else if (!config.envConfig.preserve_user_environment) {
+            config.envConfig.preserve_user_environment = false;
+        }
 
         if (!config.graphConfig) { config.graphConfig = []; }
         if (!config.preLaunchCommands) { config.preLaunchCommands = []; }
